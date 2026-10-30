@@ -1,0 +1,14 @@
+uploads = []
+
+[[generated]]
+id = "tp56GvLWfB-M1j6XtANvz"
+uri = "file://client/public/withdrawal-banner.png"
+type = "image"
+title = "industrial robots dark blue banner"
+
+[[outputs]]
+id = "PL4-GNtW1CRsLuKZn07yS"
+uri = "file://plesk-deploy-bundle.zip"
+type = "unspecified"
+title = "Paquet de déploiement Plesk"
+logical_id = "6637b4bf-80e9-4223-b19d-06cb3d8174a2"

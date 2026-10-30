@@ -1,0 +1,38 @@
+- [WestPay Integration](westpay-integration.md) — Redirect-based deposit flow + HMAC webhook; per-country API keys for withdrawals; secrets only (never in code/DB).
+- [SendavaPay integration](sendavapay-integration.md) — Payin deposit flow: backend creates+initiates, user phone auto-used, OTP/redirect handled, webhook HMAC verified.
+- [Imported database setup](imported-database-setup.md) — Preserve an existing Replit session table when applying a first-run Drizzle schema.
+- [Database hosting choice](database-hosting-choice.md) — Supabase is the only application database for both Replit and Plesk.
+- [Startup database safety](startup-database-safety.md) — Never drop tables or columns from startup seeding; gate destructive maintenance scripts behind explicit review.
+- [Plesk GitHub deployment](plesk-github-deployment.md) — Plesk pulls dist; the user manages secret values and must not be asked to share them.
+- [Login privacy](login-privacy.md) — Do not persist passwords or phone numbers in browser storage; privacy scans classify remembered phone numbers as sensitive.
+- [Brand theme isolation](brand-theme-isolation.md) — Apply Scotgold branding throughout the app except `/robotpay`; preserve RobotPay’s original theme.
+- [Dashboard language and catalog](dashboard-language-and-catalog.md) — Keep French UI, page-name-only titles, English meta descriptions, and the five French tabs.
+- [Home transaction showcase](home-transaction-showcase.md) — Keep the scrolling homepage transaction sample visibly fictional, English, FCFA-only, and isolated from live account data.
+- [Scotgold product artwork](robot-product-art.md) — Use the authorized Scotgold logo and gold imagery for the brand and customer-facing product offers.
+- [Empty-state illustration](empty-state-illustration.md) — Use the user's uploaded illustration for genuine empty results across user, Admin, Banker, and RobotPay views; leave loading, errors, and payment progress unchanged.
+- [InPay callback classification](inpay-callbacks.md) — InPay payin and payout callbacks can both include order_number; classify using the merchant reference prefix first.
+- [InPay IP whitelist](inpay-ip-whitelist.md) — InPay rejects API calls with errno 5 until the server's public egress IP is whitelisted.
+- [AshtechPay integration](ashtechpay-burkina.md) — Use the AshTech profile ID bound to the Bearer key, not the app customer's ID.
+- [PPayPros live validation](ppaypros-live-validation.md) — Keep payin/payout disabled until the XOF amount scale and mobile-wallet payout compatibility are verified with the merchant.
+- [Toast appearance](toast-notifications.md) — Keep John Deere toasts as compact, centered charcoal popups with a white exclamation and copy; leave RobotPay's legacy toast style unchanged.
+- [Transaction history rules](transaction-history-rules.md) — User histories omit provider names; deposits show no fees; admins search by the shared `deqmsll` order number.
+- [History tab visibility](history-tab-visibility.md) — Keep both « Tout » and « Revenus » clearly visible; conflicting styles previously made them blend into the page.
+- [DrimPay integration](drimpay-integration.md) — Keep credentials in server Secrets, activate per country, and retain guarded, idempotent payment reconciliation.
+- [Gift-code redemption feedback](gift-code-redemption.md) — After a confirmed claim, show chest feedback immediately; refresh the account balance in the background.
+- [Mobile screenshot scale](mobile-screenshot-scale.md) — Derive CSS viewport dimensions from original phone captures; chat thumbnails are not CSS pixels.
+- [Responsive clip paths](responsive-clip-paths.md) — CSS `path()` in Chromium rejects percentage coordinates; use an object-bounding-box SVG clip for responsive curves.
+- [Screenshot artwork extraction](screenshot-artwork-extraction.md) — Crop distinctive artwork from original captures, isolate its silhouette, and animate surrounding layers separately.
+- [Fortune wheel artwork](fortune-wheel-artwork.md) — Use the real wheel artwork from the user’s reference instead of CSS-drawn coin or GO graphics.
+- [Fortune wheel turns](fortune-wheel-spins.md) — Turns come from qualifying referred-user stable purchases or admin grants; prizes credit the deposit balance, not check-in.
+- [Daily check-in bonus](daily-checkin-bonus.md) — The presence button awards 50 FCFA once per day; keep it separate from wheel turns and product earnings.
+- [Withdrawal account editing](withdrawal-account-editing.md) — Each user has one editable primary withdrawal account; keep operators sourced from Admin-configured countries.
+- [Activity product launch clocks](activity-product-launch-clocks.md) — TG, BF, and CI share local time; BJ, CM, and NE launch one hour ahead.
+- [Activity product purchase rules](activity-product-purchase-rules.md) — Require a paid stable purchase and cap activity price at the highest single stable purchase; enforce stock and launch limits.
+- [Activity product names](activity-product-names.md) — Name activity offers Scotgold AVC1, AVC2, etc.; recognize old Robotics-fund prefixes when continuing the sequence.
+- [Withdrawal product eligibility](withdrawal-product-eligibility.md) — Withdrawals require at least one active stable position; activity-only and completed positions do not qualify.
+- [Revoked product visibility](revoked-product-visibility.md) — Hide admin-revoked positions from user lists while retaining their record and distinguishing them from completed products.
+- [Referral commission eligibility](referral-commission-policy.md) — Pay referral commissions only on the referred user's first paid stable-product purchase.
+- [Product payout policy](product-payout-policy.md) — Product earnings are credited once at maturity; preserve and subtract any amounts already paid on legacy positions.
+- [Unified balance](balance-separation.md) — Keep one spendable total; “Mes revenus” is informational cumulative credited earnings, not another balance.
+- [Authentication viewport](authentication-viewport.md) — Keep auth screens fixed; preserve Admin-configured countries, the shared selector, supplied icons, and server-verified login/signup codes.
+- [Product catalog source](product-catalog-source.md) — Product names and financial terms come from the database; startup must not restore hardcoded catalog values.

@@ -1,0 +1,337 @@
+.scotgold-invest-page,
+.scotgold-invest-page * {
+  box-sizing: border-box;
+}
+
+.scotgold-invest-page {
+  min-height: 100dvh;
+  padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  overflow-x: hidden;
+  background: #030303;
+  color: #f1f0ec;
+  font-family: Inter, Arial, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scotgold-invest-shell {
+  position: relative;
+  width: min(100%, 512px);
+  min-height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  background-color: #030303;
+  background-image:
+    radial-gradient(ellipse at 9% 25%, rgba(125, 88, 26, 0.14), transparent 24%),
+    radial-gradient(ellipse at 97% 65%, rgba(122, 82, 20, 0.12), transparent 22%),
+    url("/scotgold-products/streaks.svg");
+  background-repeat: no-repeat;
+  background-position: center top, center top, center top;
+  background-size: 100% 340px, 100% 420px, 100% 240px;
+}
+
+.scotgold-invest-header {
+  display: flex;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1px;
+}
+
+.scotgold-invest-header h1 {
+  margin: 0;
+  color: #d9b84f;
+  font-size: 23px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  text-shadow: 0 1px 8px rgba(227, 179, 64, 0.2);
+}
+
+.scotgold-invest-balance {
+  position: relative;
+  display: grid;
+  height: 118px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  margin: 18px 17px 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: linear-gradient(110deg, #e5b936 0%, #f6d36e 56%, #ffdd80 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  color: #15130f;
+}
+
+.scotgold-invest-balance::before {
+  position: absolute;
+  inset: 0;
+  background: url("/scotgold-products/waves.svg") center / 100% 100% no-repeat;
+  content: "";
+  pointer-events: none;
+}
+
+.scotgold-invest-balance__item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  padding-top: clamp(20px, 7vw, 36px);
+}
+
+.scotgold-invest-balance__currency {
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.scotgold-invest-balance__value {
+  max-width: 100%;
+  margin-top: 3px;
+  font-size: clamp(18px, 5vw, 26px);
+  font-weight: 500;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.scotgold-invest-balance__label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 4px;
+  color: #322916;
+  font-size: clamp(12px, 3vw, 15px);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.scotgold-invest-balance__label img {
+  display: block;
+  width: 22px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.scotgold-invest-tabs {
+  display: grid;
+  height: 42px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  margin: 34px 17px 0;
+  border-bottom: 1px solid rgba(227, 222, 208, 0.68);
+}
+
+.scotgold-invest-tab {
+  position: relative;
+  min-width: 0;
+  border: 0;
+  padding: 0 0 10px;
+  background: transparent;
+  color: #e9e6df;
+  cursor: pointer;
+  font: inherit;
+  font-size: clamp(14px, 3.8vw, 20px);
+  line-height: 1.15;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scotgold-invest-tab:last-child {
+  text-align: right;
+}
+
+.scotgold-invest-tab.is-active {
+  color: #e5bd47;
+}
+
+.scotgold-invest-tab.is-active::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #d7aa34, #f1cf66);
+  content: "";
+}
+
+.scotgold-invest-tab:focus-visible,
+.scotgold-product-buy:focus-visible {
+  outline: 2px solid #f2ce62;
+  outline-offset: 3px;
+}
+
+.scotgold-invest-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 15px;
+  padding: 13px 17px 24px;
+}
+
+.scotgold-product-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #3c3b39;
+  border-radius: 14px;
+  padding: 6px;
+  background: #292929;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.38);
+}
+
+.scotgold-product-photo {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1.22;
+  border-radius: 8px;
+  background: #4a3517;
+}
+
+.scotgold-product-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scotgold-product-photo::after {
+  position: absolute;
+  inset: 55% 0 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.76));
+  content: "";
+  pointer-events: none;
+}
+
+.scotgold-product-photo > span {
+  position: absolute;
+  z-index: 1;
+  bottom: 7px;
+  left: 7px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 18px;
+  text-shadow: 0 1px 3px #000;
+}
+
+.scotgold-product-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, clamp(52px, 13.3vw, 68px));
+  margin-top: 8px;
+  overflow: hidden;
+  border: 1px solid #454545;
+  border-radius: 8px;
+  background: #303030;
+}
+
+.scotgold-product-metric {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 2px;
+  text-align: center;
+}
+
+.scotgold-product-metric:nth-child(odd) {
+  border-right: 1px solid #494949;
+}
+
+.scotgold-product-metric:nth-child(-n + 2) {
+  border-bottom: 1px solid #494949;
+}
+
+.scotgold-product-metric strong {
+  max-width: 100%;
+  overflow: hidden;
+  color: #f2f0ec;
+  font-size: clamp(10px, 2.75vw, 14px);
+  font-weight: 700;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scotgold-product-metric span {
+  max-width: 100%;
+  overflow: hidden;
+  color: #d0ceca;
+  font-size: clamp(10px, 2.6vw, 13px);
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scotgold-product-buy {
+  width: 100%;
+  height: 40px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(105deg, #dfb33b, #f6d16b);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  color: #17130b;
+  cursor: pointer;
+  font: inherit;
+  font-size: 16px;
+  transition: filter 120ms ease, transform 120ms ease, opacity 120ms ease;
+}
+
+.scotgold-product-buy:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.scotgold-product-buy:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.scotgold-product-buy:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.scotgold-invest-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-top: 19px;
+  color: #dedbd8;
+  font-size: 16px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.scotgold-invest-error button {
+  margin-top: 8px;
+  border: 0;
+  background: transparent;
+  color: #e5bd47;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: underline;
+}
+
+.is-owned-products {
+  padding-top: 13px;
+}
+
+@media (max-width: 380px) {
+  .scotgold-invest-tabs {
+    margin-right: 12px;
+    margin-left: 12px;
+  }
+
+  .scotgold-invest-grid {
+    gap: 9px;
+    padding-right: 11px;
+    padding-left: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scotgold-invest-page *,
+  .scotgold-invest-page *::before,
+  .scotgold-invest-page *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

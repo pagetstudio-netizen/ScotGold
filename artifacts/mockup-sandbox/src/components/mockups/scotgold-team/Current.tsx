@@ -1,0 +1,195 @@
+import { useState } from "react";
+import "./Current.css";
+
+const demoStats = {
+  level1Count: 0,
+  level2Count: 0,
+  level3Count: 0,
+  totalCommission: 0,
+  level1Commission: 0,
+  level2Commission: 0,
+  level3Commission: 0,
+  level1RechargeAmount: 0,
+  level2RechargeAmount: 0,
+  level3RechargeAmount: 0,
+  teamRechargeAmount: 0,
+};
+const demoSettings = {
+  level1Commission: "35",
+  level2Commission: "2",
+  level3Commission: "1",
+};
+function useQuery<T>({ queryKey }: { queryKey: string[] }) {
+  return {
+    data: (queryKey[0] === "/api/team/stats" ? demoStats : demoSettings) as T,
+    isError: false,
+  };
+}
+function useAuth() {
+  return { user: { country: "TG" } };
+}
+function getCountryByCode(_countryCode: string) {
+  return { currency: "FCFA" };
+}
+function useLocation(): [string, (path: string) => void] {
+  return ["/team", () => {}];
+}
+
+type TeamLevel = 1 | 2 | 3;
+
+interface TeamStats {
+  level1Count: number;
+  level2Count: number;
+  level3Count: number;
+  totalCommission: number;
+  level1Commission: number;
+  level2Commission: number;
+  level3Commission: number;
+  level1RechargeAmount: number;
+  level2RechargeAmount: number;
+  level3RechargeAmount: number;
+  teamRechargeAmount: number;
+}
+
+const formatWholeNumber = (value: number) =>
+  Math.round(Number(value) || 0).toLocaleString("fr-FR");
+
+const formatAmount = (value: number, decimals = false) =>
+  new Intl.NumberFormat("fr-FR", {
+    minimumFractionDigits: decimals ? 2 : 0,
+    maximumFractionDigits: decimals ? 2 : 0,
+  }).format(Number(value) || 0);
+
+export default function TeamPage() {
+  const { user } = useAuth();
+  const [, navigate] = useLocation();
+  const [activeLevel, setActiveLevel] = useState<TeamLevel>(1);
+
+  const {
+    data: stats,
+    isError: statsError,
+  } = useQuery<TeamStats>({
+    queryKey: ["/api/team/stats"],
+  });
+
+  const {
+    data: settings,
+    isError: settingsError,
+  } = useQuery<Record<string, string>>({
+    queryKey: ["/api/settings"],
+  });
+
+  if (!user) return null;
+
+  const countryInfo = getCountryByCode(user.country || "TG");
+  const rawCurrency = countryInfo?.currency || "FCFA";
+  const currency = ["XOF", "XAF", "FCFA"].includes(rawCurrency) ? "FCFA" : rawCurrency;
+
+  const selected = {
+    1: {
+      count: stats?.level1Count ?? 0,
+      commission: stats?.level1Commission ?? 0,
+      recharge: stats?.level1RechargeAmount ?? 0,
+    },
+    2: {
+      count: stats?.level2Count ?? 0,
+      commission: stats?.level2Commission ?? 0,
+      recharge: stats?.level2RechargeAmount ?? 0,
+    },
+    3: {
+      count: stats?.level3Count ?? 0,
+      commission: stats?.level3Commission ?? 0,
+      recharge: stats?.level3RechargeAmount ?? 0,
+    },
+  }[activeLevel];
+
+  const rateValue = Number(settings?.[`level${activeLevel}Commission`]);
+  const rateLabel = Number.isFinite(rateValue)
+    ? `${new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 2 }).format(rateValue)}%`
+    : "—";
+
+  const teamSize =
+    (stats?.level1Count ?? 0) +
+    (stats?.level2Count ?? 0) +
+    (stats?.level3Count ?? 0);
+
+  return (
+    <main className="team-page">
+      <div className="team-page-shell">
+        <section className="team-overview" aria-label="Résumé de l'équipe">
+          <div className="team-overview-item">
+            <span>Revenus de l'équipe</span>
+            <strong>{formatAmount(stats?.totalCommission ?? 0, true)} {currency}</strong>
+          </div>
+          <div className="team-overview-item team-overview-item-centered">
+            <span>Taille de l'équipe</span>
+            <strong>{formatWholeNumber(teamSize)}</strong>
+          </div>
+          <div className="team-overview-item team-overview-item-right">
+            <span>Recharge d'équipe</span>
+            <strong>{formatAmount(stats?.teamRechargeAmount ?? 0)} {currency}</strong>
+          </div>
+        </section>
+
+        <div className="team-level-switcher" role="tablist" aria-label="Niveaux de l’équipe">
+          {([1, 2, 3] as TeamLevel[]).map((level) => (
+            <button
+              key={level}
+              type="button"
+              role="tab"
+              aria-selected={activeLevel === level}
+              className={`team-level-tab${activeLevel === level ? " is-active" : ""}`}
+              onClick={() => setActiveLevel(level)}
+              data-testid={`team-level-tab-${level}`}
+            >
+              niveau {level}
+            </button>
+          ))}
+        </div>
+
+        <section className="team-active-summary" aria-live="polite">
+          <div className="team-active-metrics">
+            <span>Revenu ({currency}) : <strong>{formatAmount(selected.commission, true)}</strong></span>
+            <span>Recharge ({currency}) : <strong>{formatAmount(selected.recharge)}</strong></span>
+          </div>
+          <p className="team-active-count">Tous {formatWholeNumber(selected.count)}</p>
+        </section>
+
+        <svg className="team-rate-clip-defs" aria-hidden="true" focusable="false">
+          <defs>
+            <clipPath id="team-rate-banner-clip" clipPathUnits="objectBoundingBox">
+              <path d="M 0.1 0.02 C 0.0448 0.02 0 0.0872 0 0.17 L 0 0.83 C 0 0.9128 0.0448 0.98 0.1 0.98 C 0.3 0.86 0.7 0.86 0.9 0.98 C 0.9552 0.98 1 0.9128 1 0.83 L 1 0.17 C 1 0.0872 0.9552 0.02 0.9 0.02 C 0.7 0.14 0.3 0.14 0.1 0.02 Z" />
+            </clipPath>
+          </defs>
+        </svg>
+
+        <button
+          type="button"
+          className="team-rate-banner"
+          onClick={() => navigate(`/team-details?level=${activeLevel}`)}
+          aria-label={`Voir les détails de l’équipe au niveau ${activeLevel}`}
+          data-testid="button-team-rate-details"
+        >
+          <span className="team-rate-banner-shape" aria-hidden="true">
+            <img className="team-rate-background-robot" src="/images/scotgold-team/gold-bars-stack.jpg" alt="" />
+          </span>
+          <img className="team-rate-robot" src="/images/scotgold-team/gold-bars-closeup.jpg" alt="" aria-hidden="true" />
+          <span className="team-rate-copy">
+            <strong>{rateLabel}</strong>
+            <span>Taux</span>
+          </span>
+        </button>
+
+        <p className="team-rate-hint">
+          Cher utilisateur, veuillez cliquer sur le bandeau jaune pour consulter les détails de vos filleuls.
+        </p>
+
+        {(statsError || settingsError) && (
+          <p className="team-page-error" role="status">
+            Certaines données de l’équipe ne sont pas disponibles pour le moment.
+          </p>
+        )}
+      </div>
+    </main>
+  );
+}

@@ -1,0 +1,90 @@
+.session-loading-screen {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #f6f6f6;
+  color: #686868;
+  font-family: Arial, sans-serif;
+}
+
+.session-loading-content {
+  display: flex;
+  width: min(300px, calc(100vw - 48px));
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  transform: translateY(-24px);
+}
+
+.session-loading-logo-frame {
+  position: relative;
+  display: grid;
+  width: 116px;
+  height: 116px;
+  place-items: center;
+}
+
+.session-loading-logo-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid transparent;
+  border-right-color: #287be2;
+  border-bottom-color: #287be2;
+  border-radius: 50%;
+  animation: session-loading-rotate 1.15s linear infinite;
+}
+
+.session-loading-logo {
+  display: block;
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: #fff;
+  object-fit: contain;
+}
+
+.session-loading-progress {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.session-loading-progress-track {
+  width: 100%;
+  height: 13px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dedede;
+}
+
+.session-loading-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: #287be2;
+  transition: width 80ms linear;
+}
+
+.session-loading-percentage {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+@keyframes session-loading-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .session-loading-logo-ring {
+    animation-duration: 3s;
+  }
+
+  .session-loading-progress-fill {
+    transition: none;
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Scotgold Resources Ltd.",
+  "short_name": "Scotgold",
+  "description": "Scotgold Resources Ltd. explore et développe des projets aurifères en Écosse, dont la mine de Cononish dans les Highlands.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1733",
+  "theme_color": "#0B1733",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/scotgold-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/scotgold-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

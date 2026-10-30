@@ -1,0 +1,410 @@
+import { lazy, Suspense, useEffect, useState } from "react";
+import { Switch, Route, useLocation, Redirect } from "wouter";
+import { queryClient } from "./lib/queryClient";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { AuthProvider, useAuth } from "@/lib/auth";
+import BottomNav from "@/components/bottom-nav";
+import HomeWelcomePopup from "@/components/home-welcome-popup";
+import SessionLoadingScreen from "@/components/session-loading-screen";
+import { ADMIN_PATH } from "@/lib/admin-path";
+import { applyPageMetadata } from "@/lib/page-metadata";
+
+const LoginPage = lazy(() => import("@/pages/login"));
+const RegisterPage = lazy(() => import("@/pages/register"));
+const HomePage = lazy(() => import("@/pages/home-dashboard"));
+const TasksPage = lazy(() => import("@/pages/tasks"));
+const InvestPage = lazy(() => import("@/pages/invest"));
+const OrdersPage = lazy(() => import("@/pages/orders"));
+const TeamPage = lazy(() => import("@/pages/team"));
+const AccountPage = lazy(() => import("@/pages/account"));
+const AdminPage = lazy(() => import("@/pages/admin"));
+const AdminTeamPage = lazy(() => import("@/pages/admin-team"));
+const BankerPage = lazy(() => import("@/pages/banker"));
+const DepositPage = lazy(() => import("@/pages/deposit"));
+const RobotPayPage = lazy(() => import("@/pages/robotpay"));
+const WithdrawalPage = lazy(() => import("@/pages/withdrawal"));
+const DepositHistoryPage = lazy(() => import("@/pages/deposit-history"));
+const DepositsHistoryPage = lazy(() => import("@/pages/deposit-history-real"));
+const HistoryPage = lazy(() => import("@/pages/history"));
+const ServicePage = lazy(() => import("@/pages/service"));
+const WalletPage = lazy(() => import("@/pages/wallet"));
+const ChangePasswordPage = lazy(() => import("@/pages/change-password"));
+const AboutPage = lazy(() => import("@/pages/about"));
+const RulesPage = lazy(() => import("@/pages/rules"));
+const TeamDetailsPage = lazy(() => import("@/pages/team-details"));
+const CheckinPage = lazy(() => import("@/pages/checkin"));
+const RewardsPage = lazy(() => import("@/pages/rewards"));
+const WithdrawalHistoryPage = lazy(() => import("@/pages/withdrawal-history"));
+const DepositOrdersPage = lazy(() => import("@/pages/deposit-orders"));
+const SalaryBonusPage = lazy(() => import("@/pages/salary-bonus"));
+const ProductDetailsPage = lazy(() => import("@/pages/product-details"));
+const GiftCodePage = lazy(() => import("@/pages/gift-code"));
+const NotFound = lazy(() => import("@/pages/not-found"));
+
+function PageLoading() {
+  return (
+    <div className="page-loading-overlay" role="status" aria-label="Chargement de la page">
+      <div className="page-loading-modal">
+        <span className="page-loading-spinner" aria-hidden="true">
+          {Array.from({ length: 12 }, (_, index) => (
+            <span key={index} />
+          ))}
+        </span>
+        <span className="page-loading-label">Loading</span>
+      </div>
+    </div>
+  );
+}
+
+function DelayedPageLoading() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setVisible(true), 500);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  return visible ? <PageLoading /> : null;
+}
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+  const [location] = useLocation();
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
+
+  if (!user) {
+    return <Redirect to="/login" />;
+  }
+
+  if (user.isBanned) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-destructive mb-2">Compte suspendu</h1>
+          <p className="text-muted-foreground">Votre compte a été suspendu. Contactez le support.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if ((user as any).isBanker && !user.isAdmin && location !== "/banker") {
+    return <Redirect to="/banker" />;
+  }
+
+  return <>{children}</>;
+}
+
+function BankerRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
+
+  if (!user) return <Redirect to="/login" />;
+  if (!(user as any).isBanker && !user.isAdmin) return <Redirect to="/" />;
+
+  return <>{children}</>;
+}
+
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
+
+  if (!user || !user.isAdmin) {
+    return <Redirect to="/" />;
+  }
+
+  return <>{children}</>;
+}
+
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
+
+  if (user) {
+    return <Redirect to="/" />;
+  }
+
+  return <>{children}</>;
+}
+
+function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <div className="min-h-screen bg-background">{children}</div>;
+}
+
+function BrandThemeScope({ children }: { children: React.ReactNode }) {
+  const [location] = useLocation();
+  const isRobotPay = location === "/robotpay";
+
+  return <div className={isRobotPay ? "ton-theme" : "john-deere-theme"}>{children}</div>;
+}
+
+function AppNavigationShell() {
+  const { user } = useAuth();
+  const [location] = useLocation();
+  useEffect(() => {
+    applyPageMetadata(location);
+  }, [location]);
+
+  const publicPaths = ["/login", "/register", "/invitation", "/rejoindre"];
+  const servicePaths = [
+    "/deposit",
+    "/robotpay",
+    "/withdrawal",
+    "/checkin",
+    "/change-password",
+    "/wallet",
+    "/history",
+    "/deposit-history",
+    "/deposits-history",
+    "/withdrawal-history",
+    "/about",
+    "/service",
+  ];
+  const isAdminPanel = location === ADMIN_PATH || location.startsWith(`${ADMIN_PATH}/`);
+  const showNavigation =
+    Boolean(user)
+    && !isAdminPanel
+    && !publicPaths.includes(location)
+    && !servicePaths.includes(location);
+
+  return (
+    <div className="min-h-screen">
+      <Router />
+      {showNavigation && <BottomNav />}
+    </div>
+  );
+}
+
+function Router() {
+  return (
+    <Switch>
+      <Route path="/login">
+        <PublicRoute>
+          <LoginPage />
+        </PublicRoute>
+      </Route>
+      <Route path="/register">
+        <PublicRoute>
+          <RegisterPage />
+        </PublicRoute>
+      </Route>
+      <Route path="/invitation">
+        <PublicRoute>
+          <RegisterPage />
+        </PublicRoute>
+      </Route>
+      <Route path="/rejoindre">
+        <PublicRoute>
+          <RegisterPage />
+        </PublicRoute>
+      </Route>
+      <Route path="/products/:id">
+        <ProtectedRoute>
+          <ProductDetailsPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/">
+        <ProtectedRoute>
+          <AppLayout>
+            <HomePage />
+          </AppLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/tasks">
+        <ProtectedRoute>
+          <AppLayout>
+            <TasksPage />
+          </AppLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/invest">
+        <ProtectedRoute>
+          <AppLayout>
+            <InvestPage />
+          </AppLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/orders">
+        <ProtectedRoute>
+          <AppLayout>
+            <OrdersPage />
+          </AppLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/team">
+        <ProtectedRoute>
+          <AppLayout>
+            <TeamPage />
+          </AppLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/my-products">
+        <ProtectedRoute>
+          <AppLayout>
+            <InvestPage />
+          </AppLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/checkin">
+        <ProtectedRoute>
+          <CheckinPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/account">
+        <ProtectedRoute>
+          <AppLayout>
+            <AccountPage />
+          </AppLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/deposit">
+        <ProtectedRoute>
+          <DepositPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/robotpay">
+        <ProtectedRoute>
+          <RobotPayPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/withdrawal">
+        <ProtectedRoute>
+          <WithdrawalPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/deposit-history">
+        <ProtectedRoute>
+          <DepositHistoryPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/deposits-history">
+        <ProtectedRoute>
+          <DepositsHistoryPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/history">
+        <ProtectedRoute>
+          <HistoryPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/withdrawal-history">
+        <ProtectedRoute>
+          <WithdrawalHistoryPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/deposit-orders">
+        <ProtectedRoute>
+          <DepositOrdersPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/service">
+        <AppLayout>
+          <ServicePage />
+        </AppLayout>
+      </Route>
+      <Route path="/wallet">
+        <ProtectedRoute>
+          <WalletPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/change-password">
+        <ProtectedRoute>
+          <ChangePasswordPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/about">
+        <ProtectedRoute>
+          <AboutPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/rules">
+        <ProtectedRoute>
+          <RulesPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/gift-code">
+        <ProtectedRoute>
+          <GiftCodePage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/team-details">
+        <ProtectedRoute>
+          <TeamDetailsPage />
+        </ProtectedRoute>
+      </Route>
+      <Route path="/daily-bonus">
+        <ProtectedRoute>
+          <AppLayout>
+            <RewardsPage />
+          </AppLayout>
+        </ProtectedRoute>
+      </Route>
+      <Route path="/salary-bonus">
+        <ProtectedRoute>
+          <AppLayout>
+            <SalaryBonusPage />
+          </AppLayout>
+        </ProtectedRoute>
+      </Route>
+      {/* /admin is a decoy — the server already returns 404 for it,
+          but we also map it to NotFound on the client to be thorough. */}
+      <Route path="/admin" component={NotFound} />
+      <Route path="/admin/:rest*" component={NotFound} />
+      {/* Real admin panel is served under the secret path */}
+      <Route path={ADMIN_PATH}>
+        <AdminRoute>
+          <AdminPage />
+        </AdminRoute>
+      </Route>
+      <Route path={`${ADMIN_PATH}/team/:id`}>
+        <AdminRoute>
+          <AdminTeamPage />
+        </AdminRoute>
+      </Route>
+      <Route path="/banker">
+        <BankerRoute>
+          <BankerPage />
+        </BankerRoute>
+      </Route>
+      <Route component={NotFound} />
+    </Switch>
+  );
+}
+
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AuthProvider>
+          <SessionLoadingScreen />
+          <BrandThemeScope>
+            <Suspense fallback={<DelayedPageLoading />}>
+              <AppNavigationShell />
+            </Suspense>
+            <HomeWelcomePopup />
+            <Toaster />
+          </BrandThemeScope>
+        </AuthProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+}
+
+export default App;

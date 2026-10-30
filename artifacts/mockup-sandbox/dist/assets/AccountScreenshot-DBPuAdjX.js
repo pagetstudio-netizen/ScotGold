@@ -1,0 +1,1 @@
+import{j as e}from"./index-_ve1TrR4.js";/* empty css               */function r(){return e.jsx("img",{className:"account-capture",src:"/__mockup/account/reference-crop.png",alt:"Capture de référence de la page Mon compte RoboticsFund"})}export{r as AccountScreenshot};

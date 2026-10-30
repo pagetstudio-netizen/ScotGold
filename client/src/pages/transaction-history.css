@@ -1,0 +1,361 @@
+.transaction-history-page {
+  min-height: 100dvh;
+  background: #000;
+  color: #ededed;
+  font-family: Inter, Arial, system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.transaction-history-page,
+.transaction-history-page * {
+  box-sizing: border-box;
+}
+
+.transaction-history-shell {
+  width: 100%;
+  max-width: 512px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background: #000;
+}
+
+.transaction-history-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  height: 73px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 32px,
+      rgba(234, 205, 151, 0.08) 33px 34px,
+      transparent 35px 50px
+    ),
+    radial-gradient(ellipse at 76% 0%, rgba(165, 123, 55, 0.25), transparent 48%),
+    linear-gradient(150deg, #251d10 0%, #100d08 60%, #080706 100%);
+}
+
+.transaction-history-header h1 {
+  max-width: calc(100% - 100px);
+  margin: 0;
+  color: #f4f1eb;
+  font-size: clamp(18px, 4.1vw, 21px);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.transaction-history-back {
+  position: absolute;
+  top: 0;
+  left: 6px;
+  display: grid;
+  width: 44px;
+  height: 100%;
+  place-items: center;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #f4f1eb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.transaction-history-back svg {
+  width: 27px;
+  height: 27px;
+  stroke-width: 1.7;
+}
+
+.transaction-history-list {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 15px 32px;
+}
+
+.transaction-record-label {
+  display: block;
+  color: #99999b;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.transaction-record-status {
+  display: inline-flex;
+  min-height: 29px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0 13px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.transaction-record-status.is-success {
+  background: rgba(22, 105, 76, 0.32);
+  color: #55d99c;
+}
+
+.transaction-record-status.is-pending {
+  background: rgba(124, 96, 35, 0.35);
+  color: #f0cf79;
+}
+
+.transaction-record-status.is-failure {
+  background: rgba(133, 43, 43, 0.34);
+  color: #f07c7c;
+}
+
+.deposit-record-card,
+.withdrawal-record-card {
+  width: 100%;
+  border: 1px solid #37352f;
+  border-radius: 11px;
+  background: linear-gradient(145deg, #202020 0%, #1b1b1b 100%);
+  box-shadow: 0 4px 13px rgba(0, 0, 0, 0.22);
+}
+
+.deposit-record-card {
+  position: relative;
+  min-height: 196px;
+  padding: 22px 15px 15px;
+}
+
+.deposit-record-heading,
+.withdrawal-record-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.deposit-record-heading {
+  min-height: 20px;
+  margin-left: 22px;
+}
+
+.deposit-record-heading .transaction-record-status {
+  position: absolute;
+  top: 32px;
+  right: 15px;
+}
+
+.deposit-record-amount {
+  position: relative;
+  display: block;
+  margin-top: 4px;
+  margin-left: 22px;
+  color: #f5d782;
+  font-size: clamp(25px, 6vw, 29px);
+  font-weight: 700;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.deposit-record-amount::before {
+  position: absolute;
+  top: 50%;
+  left: -23px;
+  width: 10px;
+  height: 10px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: #f5d782;
+  box-shadow: 0 0 8px rgba(245, 215, 130, 0.45);
+  content: "";
+}
+
+.deposit-record-details {
+  display: flex;
+  min-height: 82px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 17px;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #292929;
+}
+
+.deposit-record-detail {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #929295;
+  font-size: 15px;
+  line-height: 22px;
+}
+
+.deposit-record-detail strong,
+.deposit-record-detail time {
+  min-width: 0;
+  color: #dfdfe1;
+  font-size: clamp(13px, 3.7vw, 16px);
+  font-weight: 400;
+  text-align: right;
+}
+
+.deposit-record-detail strong {
+  overflow-wrap: anywhere;
+}
+
+.deposit-record-detail time {
+  white-space: nowrap;
+}
+
+.withdrawal-record-card {
+  min-height: 184px;
+  padding: 14px 14px 13px;
+}
+
+.withdrawal-record-amount {
+  display: block;
+  margin-top: 2px;
+  color: #f5d782;
+  font-size: clamp(24px, 5.8vw, 28px);
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.withdrawal-record-arrivals {
+  display: flex;
+  min-height: 49px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #292929;
+  color: #a1a1a3;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.withdrawal-record-arrivals strong {
+  color: #55d99c;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.withdrawal-record-date {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 11px;
+  color: #99999b;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.withdrawal-record-date time {
+  color: #e1e1e2;
+  text-align: right;
+}
+
+.transaction-record-skeleton {
+  width: 100%;
+  border: 1px solid #37352f;
+  border-radius: 11px;
+  background: linear-gradient(100deg, #1b1b1b 25%, #292929 45%, #1b1b1b 65%);
+  background-size: 220% 100%;
+  animation: transaction-record-shimmer 1.5s ease-in-out infinite;
+}
+
+.deposit-record-skeleton {
+  height: 196px;
+}
+
+.withdrawal-record-skeleton {
+  height: 184px;
+}
+
+.transaction-history-empty {
+  display: flex;
+  min-height: 160px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  text-align: center;
+}
+
+.transaction-history-empty p {
+  margin: 0;
+  color: #aaa;
+}
+
+.transaction-history-error {
+  display: flex;
+  min-height: 150px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #ddd;
+  text-align: center;
+}
+
+.transaction-history-error button {
+  min-height: 38px;
+  border: 1px solid #c9a447;
+  border-radius: 8px;
+  padding: 0 16px;
+  background: #282319;
+  color: #f2d37b;
+  cursor: pointer;
+}
+
+.transaction-history-page :is(button, a).transaction-history-back:focus-visible,
+.transaction-history-page button:focus-visible {
+  outline: 2px solid #e5c567;
+  outline-offset: 2px;
+}
+
+@keyframes transaction-record-shimmer {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .transaction-history-list {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .deposit-record-card {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .deposit-record-detail {
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .deposit-record-detail time {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .transaction-record-skeleton {
+    animation: none;
+  }
+}
