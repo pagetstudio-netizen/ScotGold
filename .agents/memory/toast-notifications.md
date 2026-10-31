@@ -1,10 +1,10 @@
 ---
 name: Toast notification appearance
-description: User-specified toast style for John Deere routes and the RobotPay exception.
+description: User-specified shared toast style across the app, preserving white modals.
 ---
 
-On John Deere routes, notifications should look like the supplied Android toast reference: a compact, centered, translucent charcoal popup, one large white exclamation mark, and centered white text. Use the same surface and icon for standard and destructive notifications. Keep the popup about 220 px wide, let its height fit short content, and limit it to a one-line title and at most three visible description lines. Show all toasts for 2.5 seconds on every route. Keep RobotPay's existing toast appearance unchanged while using the same duration.
+Across the entire app, use one shared toast appearance: a centered, translucent charcoal popup with simple white text, no decorative exclamation icon, and no more than two visible lines. Keep its width responsive, animate entry and exit, respect reduced-motion preferences, and show toasts for 2.5 seconds. This applies to RobotPay too. Do not alter white modal/dialog styling.
 
-**Why:** The user rejected an earlier light, branded card because it did not match the reference, asked for a smaller popup, consistent colors, and a 2.5-second duration everywhere.
+**Why:** The user requested a plain, centered, one- or two-line notification matching their reference across all app routes, while explicitly preserving white modals.
 
-**How to apply:** When changing shared toast components, preserve the compact centered treatment, line limits, short entrance/exit animation, and reduced-motion support on John Deere routes. Remove dismissed toasts promptly after the exit animation so they do not linger visibly. Keep the full text in the accessibility tree and keep the RobotPay route-specific legacy branch isolated unless the user explicitly expands the scope.
+**How to apply:** Use the shared toast component for notifications, keep standard and destructive toasts visually consistent, retain their full text accessibly even when clamped visually, and leave white modal/dialog components untouched.
