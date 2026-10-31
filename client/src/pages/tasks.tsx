@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
-import { ArrowRight, Link2 } from "lucide-react";
-import { useLocation } from "wouter";
+import { Link2 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { buildReferralLink } from "@/lib/referral-link";
@@ -9,7 +8,6 @@ import "./tasks.css";
 type CopyKind = "code" | "link";
 
 export default function TasksPage() {
-  const [, navigate] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
   const [copied, setCopied] = useState<CopyKind | null>(null);
@@ -100,18 +98,6 @@ export default function TasksPage() {
           </section>
         </header>
 
-        <section className="invite-reference-chest" aria-label="Coffre au trésor">
-          <div className="invite-reference-chest-content">
-            <img src="/scotgold-share/treasure-chest.png" alt="" aria-hidden="true" />
-            <div className="invite-reference-chest-copy">
-              <h2>Coffre au trésor</h2>
-              <button type="button" onClick={() => navigate("/gift-code")}>
-                Entrer un code
-                <ArrowRight aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-        </section>
       </div>
     </main>
   );

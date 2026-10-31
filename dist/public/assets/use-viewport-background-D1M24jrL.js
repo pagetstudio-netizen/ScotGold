@@ -1,1 +1,0 @@
-import{r as u}from"./index-7MUwTwyH.js";function s(o){u.useEffect(()=>{const r=document.documentElement,t=document.body,e=r.style.backgroundColor,n=t.style.backgroundColor;return r.style.backgroundColor=o,t.style.backgroundColor=o,()=>{r.style.backgroundColor=e,t.style.backgroundColor=n}},[o])}export{s as u};
