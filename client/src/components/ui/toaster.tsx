@@ -36,7 +36,7 @@ export function Toaster() {
             variant={variant}
             duration={TOAST_DURATION_MS}
             className={cn(
-              "w-[min(466px,calc(100vw-28px))] min-h-0 max-h-[112px] flex-col items-center justify-center gap-0 rounded-[2px] border-0 bg-[rgba(12,12,12,0.68)] px-5 py-4 text-center text-white shadow-[0_8px_28px_rgba(0,0,0,0.2)] backdrop-blur-[1px]",
+              "w-full max-w-none min-h-0 max-h-[112px] flex-col items-center justify-center gap-0 rounded-[2px] border-0 bg-[rgba(12,12,12,0.68)] px-5 py-4 text-center text-white shadow-[0_8px_28px_rgba(0,0,0,0.2)] backdrop-blur-[1px]",
               "data-[state=open]:slide-in-from-bottom-3 data-[state=closed]:slide-out-to-bottom-2 data-[state=closed]:fade-out-0 motion-reduce:animate-none motion-reduce:transition-none"
             )}
             {...props}
@@ -56,7 +56,7 @@ export function Toaster() {
           </Toast>
         )
       })}
-      <ToastViewport className="top-1/2 w-[min(30rem,calc(100vw-1rem))] gap-3" />
+      <ToastViewport className="top-1/2 w-[min(466px,calc(100vw-48px))] gap-3 p-0" />
     </ToastProvider>
   )
 }

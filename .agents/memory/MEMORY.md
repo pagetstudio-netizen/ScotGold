@@ -36,3 +36,4 @@
 - [Unified balance](balance-separation.md) — Keep one spendable total; “Mes revenus” is informational cumulative credited earnings, not another balance.
 - [Authentication viewport](authentication-viewport.md) — Keep auth screens fixed; preserve Admin-configured countries, the shared selector, supplied icons, and server-verified login/signup codes.
 - [Product catalog source](product-catalog-source.md) — Product names and financial terms come from the database; startup must not restore hardcoded catalog values.
+- [Product purchase confirmation](product-purchase-confirmation.md) — Product-buy confirmations use the compact white NON/OUI dialog; leave unrelated white dialogs unchanged.

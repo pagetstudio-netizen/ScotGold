@@ -3,12 +3,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation, useRoute } from "wouter";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import type { Product } from "@shared/schema";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
 import { getScotgoldProductDisplayName, getScotgoldProductImage } from "@/lib/john-deere-assets";
 import { isProductStockFull } from "@shared/product-purchase-limit";
+import { ProductPurchaseConfirmDialog } from "@/components/product-purchase-confirm-dialog";
 import "./product-details.css";
 
 type ProductWithClaimStatus = Product & {
@@ -222,40 +222,18 @@ export default function ProductDetailsPage() {
         </div>
       </div>
 
-      <Dialog open={confirmationOpen} onOpenChange={setConfirmationOpen}>
-        <DialogContent className="max-w-[380px] border border-[#dce5d8] bg-white text-[#202124]">
-          <DialogHeader>
-            <DialogTitle>{product.isFree ? "Réclamer le produit" : "Confirmer l'achat"}</DialogTitle>
-            <DialogDescription>
-              {product.isFree
-                ? `Réclamer gratuitement ${displayName} ?`
-                : `Confirmez l'achat de ${displayName} au prix de ${formatFcfa(price)}.`}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="mt-6 flex justify-end gap-2">
-            <button
-              type="button"
-              className="min-h-[42px] rounded-md bg-[#f1f3ef] px-4 font-semibold text-[#293327] disabled:opacity-60"
-              onClick={() => setConfirmationOpen(false)}
-              disabled={purchaseMutation.isPending}
-            >
-              Annuler
-            </button>
-            <button
-              type="button"
-              className="min-h-[42px] rounded-md bg-[#086b2d] px-4 font-semibold text-white hover:bg-[#075a27] disabled:opacity-60"
-              onClick={() => purchaseMutation.mutate(product)}
-              disabled={purchaseMutation.isPending || purchaseBlocked}
-            >
-              {purchaseMutation.isPending
-                ? "Traitement…"
-                : product.isFree
-                  ? "Réclamer"
-                  : "Confirmer"}
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <ProductPurchaseConfirmDialog
+        open={confirmationOpen}
+        onOpenChange={setConfirmationOpen}
+        onConfirm={() => purchaseMutation.mutate(product)}
+        message={
+          product.isFree
+            ? "Confirmer la réclamation de ce produit ?"
+            : "Confirmer l'achat de ce produit ?"
+        }
+        confirmLabel={purchaseMutation.isPending ? "Traitement…" : "OUI"}
+        confirmDisabled={purchaseMutation.isPending || purchaseBlocked}
+      />
     </main>
   );
 }

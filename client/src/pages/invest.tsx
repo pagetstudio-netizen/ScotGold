@@ -5,9 +5,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { getCountryByCode } from "@/lib/countries";
-import { Loader2, AlertTriangle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import type { Product } from "@shared/schema";
 import { isProductStockFull } from "@shared/product-purchase-limit";
+import { ProductPurchaseConfirmDialog } from "@/components/product-purchase-confirm-dialog";
 
 import { getScotgoldProductDisplayName, getScotgoldProductImage } from "@/lib/john-deere-assets";
 import "./invest.css";
@@ -268,104 +269,28 @@ export default function InvestPage() {
 
       {/* ── Purchase confirm modal ── */}
       {confirmProduct && (() => {
-        const productDisplayName = getScotgoldProductDisplayName(confirmProduct.id, confirmProduct.name);
-        const prodImg   = getScotgoldProductImage(confirmProduct.imageUrl, confirmProduct.id, confirmProduct.name);
         const stockFull = isProductStockFull(confirmProduct.stockLimit, confirmProduct.stockCount || 0);
         const launchAlreadyPurchased = confirmProduct.productType === "activity"
           && confirmProduct.canPurchaseThisLaunch === false;
-        const shortage  = confirmProduct.price - balance;
-        const daily     = Number(confirmProduct.dailyEarnings || 0);
-        const total     = Number(confirmProduct.totalReturn  || daily * Number(confirmProduct.cycleDays || 90));
-        const duration  = Number(confirmProduct.cycleDays || 90);
 
         return (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center px-5 bg-black/60"
-            onClick={() => setConfirmProduct(null)}
-          >
-            <div
-              className="w-full max-w-xs rounded-3xl overflow-hidden shadow-2xl"
-              style={{ background: "linear-gradient(160deg, #142644 0%, #0b1733 100%)" }}
-              onClick={e => e.stopPropagation()}
-            >
-              {/* ── Title block ── */}
-              <div className="px-5 pt-6 pb-4">
-                <p className="text-white font-extrabold text-2xl leading-tight">
-                  {productDisplayName}
-                </p>
-                <p className="text-white/70 text-sm mt-2 leading-relaxed">
-                  {confirmProduct.productType === "stable"
-                    ? "Les gains stables sont crédités toutes les 24 heures, dans la limite du rendement total prévu."
-                    : "Les gains du produit d’activité sont versés à l’échéance."}
-                </p>
-              </div>
-
-              {/* ── Details row ── */}
-              <div className="mx-5 mb-4 flex items-start gap-4">
-                {/* Product image */}
-                <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0 border-2 border-white/20">
-                  <img src={prodImg} alt={productDisplayName} className="w-full h-full object-cover" />
-                </div>
-
-                {/* Info list */}
-                <div className="flex-1 space-y-2">
-                  {[
-                    { label: "Prix",              value: `${currency} ${Number(confirmProduct.price).toLocaleString("fr-FR")}` },
-                    { label: "Gain/jour (calcul)", value: `${currency} ${daily.toLocaleString("fr-FR")}` },
-                    {
-                      label: confirmProduct.productType === "stable" ? "Rendement total prévu" : "Gain à l’échéance",
-                      value: `${currency} ${total.toLocaleString("fr-FR")}`,
-                    },
-                    { label: "Période de validité", value: `${duration} jours` },
-                  ].map(row => (
-                    <div key={row.label}>
-                      <p className="text-white/60 text-[10px] leading-none">{row.label}</p>
-                      <p className="text-white font-bold text-[13px] leading-tight">{row.value}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* ── Insufficient balance warning ── */}
-              {shortage > 0 && (
-                <div className="mx-5 mb-4 flex items-center gap-2 px-3 py-2.5 rounded-xl"
-                  style={{ background: "rgba(220,50,50,0.22)", border: "1px solid rgba(255,100,100,0.35)" }}>
-                  <AlertTriangle className="w-4 h-4 text-red-300 shrink-0" />
-                  <p className="text-red-200 text-xs leading-snug">
-                    Solde insuffisant. Il vous manque {currency} {shortage.toLocaleString("fr-FR")}.
-                  </p>
-                </div>
-              )}
-
-              {/* ── Buttons ── */}
-              <div className="flex gap-3 px-5 pb-6">
-                <button
-                  onClick={() => setConfirmProduct(null)}
-                  className="flex-1 py-3 rounded-2xl font-semibold text-white/80 text-sm active:opacity-70 transition-opacity"
-                  style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.25)" }}
-                  data-testid="button-cancel-purchase"
-                >
-                  Annuler
-                </button>
-                <button
-                  onClick={() => purchaseMutation.mutate(confirmProduct.id)}
-                  disabled={purchaseMutation.isPending || stockFull || launchAlreadyPurchased}
-                  className="flex-1 py-3 rounded-2xl font-bold text-white/90 text-sm flex items-center justify-center gap-1.5 active:opacity-70 transition-opacity"
-                  style={{ background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.25)" }}
-                  data-testid="button-confirm-purchase"
-                >
-                  {purchaseMutation.isPending
-                    ? <Loader2 className="w-4 h-4 animate-spin" />
-                    : stockFull
-                      ? "Complet"
-                      : launchAlreadyPurchased
-                        ? "Déjà acheté"
-                        : "Confirmer"
-                  }
-                </button>
-              </div>
-            </div>
-          </div>
+          <ProductPurchaseConfirmDialog
+            open
+            onOpenChange={(open) => {
+              if (!open) setConfirmProduct(null);
+            }}
+            onConfirm={() => purchaseMutation.mutate(confirmProduct.id)}
+            confirmDisabled={purchaseMutation.isPending || stockFull || launchAlreadyPurchased}
+            confirmLabel={
+              purchaseMutation.isPending
+                ? "Traitement…"
+                : stockFull
+                  ? "Complet"
+                  : launchAlreadyPurchased
+                    ? "Déjà acheté"
+                    : "OUI"
+            }
+          />
         );
       })()}
       </main>
